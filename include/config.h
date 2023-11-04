@@ -16,7 +16,8 @@
             int8_t _modbusRtsPin;
             unsigned long _serialBaudRate;
             uint32_t _serialConfig;
-            unsigned long _modbusPullingInterval;
+            unsigned long _modbusPollingInterval;
+            unsigned long _modbusPollingSlaveId;
         public:
             Config();
             void begin(Preferences *prefs);
@@ -44,8 +45,10 @@
             void setSerialParity(uint8_t value);
             uint8_t getSerialStopBits();
             void setSerialStopBits(uint8_t value);
-            unsigned long getPullingInterval();
-            void setPullingInterval(unsigned long value);
+            unsigned long getPollingInterval();
+            void setPollingInterval(unsigned long value);
+            unsigned long getPollingSlaveId();
+            void setPollingSlaveId(unsigned long value);
     };
 #ifdef DEBUG
     #define dbg(x...) debugSerial.print(x);

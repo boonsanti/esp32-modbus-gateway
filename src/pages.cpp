@@ -146,18 +146,29 @@ void setupPages(AsyncWebServer *server, ModbusClientRTU *rtu, ModbusBridgeWiFi *
               "<option value=\"32\">D32</option>"
               "<option value=\"33\">D33</option>"
             "</select>"
-          "</td>");
-    response->print("</tr>"
+          "</td>"
+        "</tr>"
+        "</table>");
+    response->print("<h3>Modbus RTU Polling</h3>"
+        "<table>"
         "<tr>"
           "<td>"
-            "<label for=\"mb\">Pulling interval</label>"
+            "<label for=\"mb\">Polling interval</label>"
           "</td>"
           "<td>");
-    response->printf("<input type=\"number\" min=\"1000\" id=\"mpi\" name=\"mpi\" value=\"%lu\">", config->getPullingInterval());
+    response->printf("<input type=\"number\" min=\"1000\" id=\"mpi\" name=\"mpi\" value=\"%lu\">", config->getPollingInterval());
     response->print("</td>"
         "</tr>"
-        "</table>"
-        "<h3>Serial (Debug)</h3>"
+        "<tr>"
+          "<td>"
+            "<label for=\"mb\">Polling Slave Id</label>"
+          "</td>"
+          "<td>");
+    response->printf("<input type=\"number\" min=\"1\" max=\"248\" id=\"mps\" name=\"mps\" value=\"%lu\">", config->getPollingSlaveId());
+    response->print("</td>"
+        "</tr>"
+        "</table>");
+    response->print("<h3>Serial (Debug)</h3>"
         "<table>"
         "<tr>"
           "<td>"
@@ -253,8 +264,13 @@ void setupPages(AsyncWebServer *server, ModbusClientRTU *rtu, ModbusBridgeWiFi *
     }
     if (request->hasParam("mpi", true)){
       auto interval = request->getParam("mpi", true)->value().toInt();
-      config->setPullingInterval(interval);
+      config->setPollingInterval(interval);
       dbgln("[webserver] saved modbus pulling interval");
+    }
+    if (request->hasParam("mps", true)){
+      auto id = request->getParam("mps", true)->value().toInt();
+      config->setPollingSlaveId(id);
+      dbgln("[webserver] saved modbus pulling slave id");
     }
     if (request->hasParam("sb", true)){
       auto baud = request->getParam("sb", true)->value().toInt();

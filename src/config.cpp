@@ -9,7 +9,8 @@ Config::Config()
     ,_modbusRtsPin(-1)
     ,_serialBaudRate(115200)
     ,_serialConfig(SERIAL_8N1)
-    ,_modbusPullingInterval(1000)
+    ,_modbusPollingInterval(1000)
+    ,_modbusPollingSlaveId(1)
 {}
 
 void Config::begin(Preferences *prefs)
@@ -22,7 +23,8 @@ void Config::begin(Preferences *prefs)
     _modbusRtsPin = _prefs->getChar("modbusRtsPin", _modbusRtsPin);
     _serialBaudRate = _prefs->getULong("serialBaudRate", _serialBaudRate);
     _serialConfig = _prefs->getULong("serialConfig", _serialConfig);
-    _modbusPullingInterval = _prefs->getULong("pullingInterval", _modbusPullingInterval);
+    _modbusPollingInterval = _prefs->getULong("pollingInterval", _modbusPollingInterval);
+    _modbusPollingSlaveId = _prefs->getULong("pollingSlaveId", _modbusPollingSlaveId);
 }
 
 uint16_t Config::getTcpPort(){
@@ -157,12 +159,22 @@ void Config::setSerialStopBits(uint8_t value){
     _prefs->putULong("serialConfig", _serialConfig);
 }
 
-unsigned long Config::getPullingInterval(){
-    return _modbusPullingInterval;
+unsigned long Config::getPollingInterval(){
+    return _modbusPollingInterval;
 }
 
-void Config::setPullingInterval(unsigned long value){
-    if (_modbusPullingInterval == value) return;
-    _modbusPullingInterval = value;
-    _prefs->putULong("pullingInterval", _modbusPullingInterval);
+void Config::setPollingInterval(unsigned long value){
+    if (_modbusPollingInterval == value) return;
+    _modbusPollingInterval = value;
+    _prefs->putULong("pollingInterval", _modbusPollingInterval);
+}
+
+unsigned long Config::getPollingSlaveId(){
+    return _modbusPollingSlaveId;
+}
+
+void Config::setPollingSlaveId(unsigned long value){
+    if (_modbusPollingSlaveId == value) return;
+    _modbusPollingSlaveId = value;
+    _prefs->putULong("pollingSlaveId", _modbusPollingSlaveId);
 }

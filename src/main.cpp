@@ -16,7 +16,8 @@ ModbusClientRTU *MBclient;
 ModbusBridgeWiFi MBbridge;
 WiFiManager wm;
 
-uint32_t modbusPullingInterval = 0;
+uint32_t modbusPollingInterval = 0;
+uint32_t modbusPollingSlaveId = 1;
 
 #define FIRST_REGISTER 0x0000
 #define NUM_VALUES 2
@@ -104,19 +105,20 @@ void setup() {
   webServer.begin();
   dbgln("[setup] finished");
 
-  modbusPullingInterval = config.getPullingInterval();
+  modbusPollingInterval = config.getPollingInterval();
+  modbusPollingSlaveId = config.getPollingSlaveId();
 }
 
 void loop() {
   static unsigned long next_request = millis();
 
-  if (modbusPullingInterval >= 1000) {
+  if (modbusPollingInterval >= 1000) {
     // Shall we do another request?
-    if (millis() - next_request > modbusPullingInterval) {
+    if (millis() - next_request > modbusPollingInterval) {
       // Yes.
       data_ready = false;
       // Issue the request
-      Error err = MBclient->addRequest((uint32_t)millis(), 2, READ_HOLD_REGISTER, FIRST_REGISTER, NUM_VALUES);
+      Error err = MBclient->addRequest((uint32_t)millis(), modbusPollingSlaveId, READ_HOLD_REGISTER, FIRST_REGISTER, NUM_VALUES);
       if (err!=SUCCESS) {
         ModbusError e(err);
         LOG_E("Error creating request: %02X - %s\n", (int)e, (const char *)e);
