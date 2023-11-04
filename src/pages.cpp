@@ -146,7 +146,15 @@ void setupPages(AsyncWebServer *server, ModbusClientRTU *rtu, ModbusBridgeWiFi *
               "<option value=\"32\">D32</option>"
               "<option value=\"33\">D33</option>"
             "</select>"
+          "</td>");
+    response->print("</tr>"
+        "<tr>"
+          "<td>"
+            "<label for=\"mb\">Pulling interval</label>"
           "</td>"
+          "<td>");
+    response->printf("<input type=\"number\" min=\"1000\" id=\"mpi\" name=\"mpi\" value=\"%lu\">", config->getPullingInterval());
+    response->print("</td>"
         "</tr>"
         "</table>"
         "<h3>Serial (Debug)</h3>"
@@ -243,6 +251,11 @@ void setupPages(AsyncWebServer *server, ModbusClientRTU *rtu, ModbusBridgeWiFi *
       config->setModbusRtsPin(rts);
       dbgln("[webserver] saved modbus rts pin");
     }
+    if (request->hasParam("mpi", true)){
+      auto interval = request->getParam("mpi", true)->value().toInt();
+      config->setPullingInterval(interval);
+      dbgln("[webserver] saved modbus pulling interval");
+    }
     if (request->hasParam("sb", true)){
       auto baud = request->getParam("sb", true)->value().toInt();
       config->setSerialBaudRate(baud);
@@ -263,7 +276,11 @@ void setupPages(AsyncWebServer *server, ModbusClientRTU *rtu, ModbusBridgeWiFi *
       config->setSerialStopBits(stop);
       dbgln("[webserver] saved serial stop bits");
     }
+
     request->redirect("/");    
+    dbgln("[webserver] rebooting...")
+    ESP.restart();
+    dbgln("[webserver] rebooted...")
   });
   server->on("/debug", HTTP_GET, [](AsyncWebServerRequest *request){
     dbgln("[webserver] GET /debug");

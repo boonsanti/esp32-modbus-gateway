@@ -9,6 +9,7 @@ Config::Config()
     ,_modbusRtsPin(-1)
     ,_serialBaudRate(115200)
     ,_serialConfig(SERIAL_8N1)
+    ,_modbusPullingInterval(1000)
 {}
 
 void Config::begin(Preferences *prefs)
@@ -21,6 +22,7 @@ void Config::begin(Preferences *prefs)
     _modbusRtsPin = _prefs->getChar("modbusRtsPin", _modbusRtsPin);
     _serialBaudRate = _prefs->getULong("serialBaudRate", _serialBaudRate);
     _serialConfig = _prefs->getULong("serialConfig", _serialConfig);
+    _modbusPullingInterval = _prefs->getULong("pullingInterval", _modbusPullingInterval);
 }
 
 uint16_t Config::getTcpPort(){
@@ -153,4 +155,14 @@ void Config::setSerialStopBits(uint8_t value){
     if (stopbits == value) return;
     _serialConfig = (_serialConfig & 0xffffffcf) | value;
     _prefs->putULong("serialConfig", _serialConfig);
+}
+
+unsigned long Config::getPullingInterval(){
+    return _modbusPullingInterval;
+}
+
+void Config::setPullingInterval(unsigned long value){
+    if (_modbusPullingInterval == value) return;
+    _modbusPullingInterval = value;
+    _prefs->putULong("pullingInterval", _modbusPullingInterval);
 }
