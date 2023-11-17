@@ -18,6 +18,10 @@
             uint32_t _serialConfig;
             unsigned long _modbusPollingInterval;
             unsigned long _modbusPollingSlaveId;
+            unsigned long _modbusPollingMstart;
+            unsigned long _modbusPollingMlength;
+            unsigned long _modbusPollingDstart;
+            unsigned long _modbusPollingDlength;
         public:
             Config();
             void begin(Preferences *prefs);
@@ -49,6 +53,14 @@
             void setPollingInterval(unsigned long value);
             unsigned long getPollingSlaveId();
             void setPollingSlaveId(unsigned long value);
+            unsigned long getPollingMstart();
+            void setPollingMstart(unsigned long value);
+            unsigned long getPollingMlength();
+            void setPollingMlength(unsigned long value);
+            unsigned long getPollingDstart();
+            void setPollingDstart(unsigned long value);
+            unsigned long getPollingDlength();
+            void setPollingDlength(unsigned long value);
     };
 #ifdef DEBUG
     #define dbg(x...) debugSerial.print(x);

@@ -11,6 +11,10 @@ Config::Config()
     ,_serialConfig(SERIAL_8N1)
     ,_modbusPollingInterval(1000)
     ,_modbusPollingSlaveId(1)
+    ,_modbusPollingMstart(0)
+    ,_modbusPollingMlength(0)
+    ,_modbusPollingDstart(0)
+    ,_modbusPollingDlength(0)
 {}
 
 void Config::begin(Preferences *prefs)
@@ -25,6 +29,10 @@ void Config::begin(Preferences *prefs)
     _serialConfig = _prefs->getULong("serialConfig", _serialConfig);
     _modbusPollingInterval = _prefs->getULong("pollingInterval", _modbusPollingInterval);
     _modbusPollingSlaveId = _prefs->getULong("pollingSlaveId", _modbusPollingSlaveId);
+    _modbusPollingMstart = _prefs->getULong("Mstart", _modbusPollingMstart);
+    _modbusPollingMlength = _prefs->getULong("Mlength", _modbusPollingMlength);
+    _modbusPollingDstart = _prefs->getULong("Dstart", _modbusPollingDstart);
+    _modbusPollingDlength = _prefs->getULong("Dlength", _modbusPollingDlength);
 }
 
 uint16_t Config::getTcpPort(){
@@ -177,4 +185,44 @@ void Config::setPollingSlaveId(unsigned long value){
     if (_modbusPollingSlaveId == value) return;
     _modbusPollingSlaveId = value;
     _prefs->putULong("pollingSlaveId", _modbusPollingSlaveId);
+}
+
+unsigned long Config::getPollingMstart(){
+    return _modbusPollingMstart;
+}
+
+void Config::setPollingMstart(unsigned long value){
+    if (_modbusPollingMstart == value) return;
+    _modbusPollingMstart = value;
+    _prefs->putULong("Mstart", _modbusPollingMstart);
+}
+
+unsigned long Config::getPollingMlength(){
+    return _modbusPollingMlength;
+}
+
+void Config::setPollingMlength(unsigned long value){
+    if (_modbusPollingMlength == value) return;
+    _modbusPollingMlength = value;
+    _prefs->putULong("Mlength", _modbusPollingMlength);
+}
+
+unsigned long Config::getPollingDstart(){
+    return _modbusPollingDstart;
+}
+
+void Config::setPollingDstart(unsigned long value){
+    if (_modbusPollingDstart == value) return;
+    _modbusPollingDstart = value;
+    _prefs->putULong("Dstart", _modbusPollingDstart);
+}
+
+unsigned long Config::getPollingDlength(){
+    return _modbusPollingDlength;
+}
+
+void Config::setPollingDlength(unsigned long value){
+    if (_modbusPollingDlength == value) return;
+    _modbusPollingDlength = value;
+    _prefs->putULong("Dlength", _modbusPollingDlength);
 }

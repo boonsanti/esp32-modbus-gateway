@@ -153,7 +153,15 @@ void setupPages(AsyncWebServer *server, ModbusClientRTU *rtu, ModbusBridgeWiFi *
         "<table>"
         "<tr>"
           "<td>"
-            "<label for=\"mb\">Polling interval</label>"
+            "<label for=\"mb\">Slave ID</label>"
+          "</td>"
+          "<td>");
+    response->printf("<input type=\"number\" min=\"1\" max=\"248\" id=\"mps\" name=\"mps\" value=\"%lu\">", config->getPollingSlaveId());
+    response->print("</td>"
+        "</tr>"
+        "<tr>"
+          "<td>"
+            "<label for=\"mb\">Interval (ms)</label>"
           "</td>"
           "<td>");
     response->printf("<input type=\"number\" min=\"1000\" id=\"mpi\" name=\"mpi\" value=\"%lu\">", config->getPollingInterval());
@@ -161,10 +169,34 @@ void setupPages(AsyncWebServer *server, ModbusClientRTU *rtu, ModbusBridgeWiFi *
         "</tr>"
         "<tr>"
           "<td>"
-            "<label for=\"mb\">Polling Slave Id</label>"
+            "<label for=\"mb\">M Start Addr</label>"
           "</td>"
           "<td>");
-    response->printf("<input type=\"number\" min=\"1\" max=\"248\" id=\"mps\" name=\"mps\" value=\"%lu\">", config->getPollingSlaveId());
+    response->printf("<input type=\"number\" min=\"0\" max=\"4000\" id=\"mstart\" name=\"mstart\" value=\"%lu\">", config->getPollingMstart());
+    response->print("</td>"
+        "</tr>"
+        "<tr>"
+          "<td>"
+            "<label for=\"mb\">M Length</label>"
+          "</td>"
+          "<td>");
+    response->printf("<input type=\"number\" min=\"0\" max=\"50\" id=\"mlength\" name=\"mlength\" value=\"%lu\">", config->getPollingMlength());
+    response->print("</td>"
+        "</tr>"
+        "<tr>"
+          "<td>"
+            "<label for=\"mb\">D Start Addr</label>"
+          "</td>"
+          "<td>");
+    response->printf("<input type=\"number\" min=\"0\" max=\"4000\" id=\"dstart\" name=\"dstart\" value=\"%lu\">", config->getPollingDstart());
+    response->print("</td>"
+        "</tr>"
+        "<tr>"
+          "<td>"
+            "<label for=\"mb\">D Length</label>"
+          "</td>"
+          "<td>");
+    response->printf("<input type=\"number\" min=\"0\" max=\"50\" id=\"dlength\" name=\"dlength\" value=\"%lu\">", config->getPollingDlength());
     response->print("</td>"
         "</tr>"
         "</table>");
@@ -271,6 +303,26 @@ void setupPages(AsyncWebServer *server, ModbusClientRTU *rtu, ModbusBridgeWiFi *
       auto id = request->getParam("mps", true)->value().toInt();
       config->setPollingSlaveId(id);
       dbgln("[webserver] saved modbus pulling slave id");
+    }
+    if (request->hasParam("mstart", true)){
+      auto mstart = request->getParam("mstart", true)->value().toInt();
+      config->setPollingMstart(mstart);
+      dbgln("[webserver] saved modbus pulling M start addr");
+    }
+    if (request->hasParam("mlength", true)){
+      auto mlength = request->getParam("mlength", true)->value().toInt();
+      config->setPollingMlength(mlength);
+      dbgln("[webserver] saved modbus pulling M length");
+    }
+    if (request->hasParam("dstart", true)){
+      auto dstart = request->getParam("dstart", true)->value().toInt();
+      config->setPollingDstart(dstart);
+      dbgln("[webserver] saved modbus pulling D start addr");
+    }
+    if (request->hasParam("dlength", true)){
+      auto dlength = request->getParam("dlength", true)->value().toInt();
+      config->setPollingDlength(dlength);
+      dbgln("[webserver] saved modbus pulling D length");
     }
     if (request->hasParam("sb", true)){
       auto baud = request->getParam("sb", true)->value().toInt();
